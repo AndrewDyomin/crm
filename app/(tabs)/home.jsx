@@ -14,6 +14,7 @@ import {
   import { ThemedView } from "@/components/ThemedView";
   import { useDispatch, useSelector } from "react-redux";
   import { logOut } from "@/redux/authSlice";
+  import { router } from "expo-router";
   
   export default function Home() {
     const dispatch = useDispatch();
@@ -21,6 +22,7 @@ import {
   
     const onLogout = async () => {
       await dispatch(logOut());
+      router.replace('/(tabs)');
     };
   
     return (
@@ -43,9 +45,6 @@ import {
               <ThemedText type="title">Welcome {user.name}</ThemedText>
               <HelloWave />
             </ThemedView>
-            <TouchableOpacity onPress={onLogout} style={styles.button}>
-                <ThemedText style={styles.buttonText}>Log Out</ThemedText>
-              </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>
       </ParallaxScrollView>

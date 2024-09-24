@@ -1,35 +1,29 @@
 import {
-  Image,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
+  Image,
   TextInput,
-  Alert,
+  Platform,
+  KeyboardAvoidingView,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { useEffect, useState } from "react";
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useDispatch, useSelector } from "react-redux";
-import { logIn } from "@/redux/authSlice";
-import { Redirect } from "expo-router";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { register } from "@/redux/authSlice";
 
-export default function HomeScreen() {
-  const [login, setLogin] = useState("");
+export default function TabTwoScreen() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
   const onLogin = async () => {
-    await dispatch(logIn({ email: login, password }));
+    await dispatch(register({ name, email, password }));
   };
-  
-  if (isLoggedIn) {
-    return <Redirect href="/(tabs)/home" />;
-  }
 
   return (
     <ParallaxScrollView
@@ -52,13 +46,19 @@ export default function HomeScreen() {
             <HelloWave />
           </ThemedView>
           <ThemedView style={styles.container}>
-            <ThemedText type="subtitle">Log in to continue</ThemedText>
+            <ThemedText type="subtitle">Register to continue</ThemedText>
             <ThemedView style={[styles.container, styles.form]}>
               <TextInput
                 style={styles.input}
+                placeholder="name"
+                value={name}
+                onChangeText={setName}
+              />
+              <TextInput
+                style={styles.input}
                 placeholder="email"
-                value={login}
-                onChangeText={setLogin}
+                value={email}
+                onChangeText={setEmail}
               />
               <TextInput
                 style={styles.input}
@@ -68,7 +68,7 @@ export default function HomeScreen() {
                 secureTextEntry
               />
               <TouchableOpacity onPress={onLogin} style={styles.button}>
-                <ThemedText style={styles.buttonText}>Log In</ThemedText>
+                <ThemedText style={styles.buttonText}>Register</ThemedText>
               </TouchableOpacity>
             </ThemedView>
           </ThemedView>
@@ -111,14 +111,14 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#B88E2F',
-    border: 'none',
+    backgroundColor: "#B88E2F",
+    border: "none",
     borderRadius: 10,
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 20,
   },
 });
