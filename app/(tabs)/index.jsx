@@ -5,22 +5,24 @@ import {
   Platform,
   TextInput,
   Alert,
-  Button,
+  TouchableOpacity,
   ScrollView,
 } from "react-native";
 import { useState } from "react";
-
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useDispatch } from "react-redux";
+import { logIn } from "@/redux/authSlice";
 
 export default function HomeScreen() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
-  const onLogin = () => {
-    Alert.alert("Credentials", `${login} + ${password}`);
+  const onLogin = async () => {
+    await dispatch(logIn({ email: login, password }));
   };
 
   return (
@@ -45,21 +47,23 @@ export default function HomeScreen() {
           </ThemedView>
           <ThemedView style={styles.container}>
             <ThemedText type="subtitle">Log in to continue</ThemedText>
-            <ThemedView style={styles.container}>
+            <ThemedView style={[styles.container, styles.form]}>
               <TextInput
                 style={styles.input}
-                placeholder="Type your email"
+                placeholder="email"
                 value={login}
                 onChangeText={setLogin}
               />
               <TextInput
                 style={styles.input}
-                placeholder="Type your password"
+                placeholder="password"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
               />
-              <Button title="Login" onPress={onLogin} />
+              <TouchableOpacity onPress={onLogin} style={styles.button}>
+                <ThemedText style={styles.buttonText}>Log In</ThemedText>
+              </TouchableOpacity>
             </ThemedView>
           </ThemedView>
         </ScrollView>
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   container: {
-    gap: 40,
+    gap: 5,
     marginBottom: 8,
   },
   logo: {
@@ -86,6 +90,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     transform: [{ translateX: -140 }],
   },
+  form: {
+    marginTop: 30,
+  },
   input: {
     borderStyle: "solid",
     borderWidth: 1,
@@ -93,7 +100,19 @@ const styles = StyleSheet.create({
     padding: 7,
     paddingHorizontal: 10,
     fontSize: 20,
-    marginBottom: 20,
+    marginBottom: 10,
   },
-  button: {},
+  button: {
+    padding: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#B88E2F',
+    border: 'none',
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 20,
+  },
 });
