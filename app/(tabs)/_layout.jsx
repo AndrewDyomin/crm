@@ -4,14 +4,19 @@ import React, { useEffect } from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { refreshUser } from "@/redux/authSlice";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
-  }, [isLoggedIn])
+    if (!isLoggedIn) {
+      dispatch(refreshUser());
+    }
+  }, []); 
  
     return (
       <Tabs

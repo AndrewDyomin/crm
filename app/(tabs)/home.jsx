@@ -18,12 +18,8 @@ import {
   
   export default function Home() {
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user)
+    const user = useSelector(state => state.auth.user)
   
-    const onLogout = async () => {
-      await dispatch(logOut());
-      router.replace('/(tabs)');
-    };
   
     return (
       <ParallaxScrollView

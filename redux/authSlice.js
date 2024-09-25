@@ -1,6 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { router } from 'expo-router';
+import { Alert } from 'react-native'
 
 axios.defaults.baseURL = 'https://furniture-production.onrender.com/';
 
@@ -39,7 +41,9 @@ export const logIn = createAsyncThunk(
     try {
       const res = await axios.post('/auth/login', {email, password});
       setAuthHeader(res.data.token);
-      router.replace('/home');
+      await AsyncStorage.setItem('token', res.data.token);
+      router.replace('/(tabs)/home');
+
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -61,21 +65,20 @@ export const logOut = createAsyncThunk(
 export const refreshUser = createAsyncThunk(
   'auth/refresh',
   async (_, thunkAPI) => {
-    const state = thunkAPI.getState();
-    let persistedToken = state.auth.token;
-
-    if (persistedToken === null) {
-      const savedAuth = JSON.parse(localStorage.getItem('auth'));
-      if (!savedAuth || savedAuth.length === 0) {
-        return thunkAPI.rejectWithValue('Unable to fetch user');
-      }
-      persistedToken = savedAuth.token;
-    }
-
     try {
+      const stateString = await AsyncStorage.getItem('persist:auth');
+      if (!stateString) {
+        return thunkAPI.rejectWithValue('No persisted state found');
+      }
+      const state = JSON.parse(stateString);
+      const persistedToken = state.token ? JSON.parse(state.token) : null;
+      if (!persistedToken) {
+        return thunkAPI.rejectWithValue('No token found');
+      }
       setAuthHeader(persistedToken);
       const res = await axios.post('/auth/current');
       return res.data;
+
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }

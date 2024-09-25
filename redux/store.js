@@ -13,14 +13,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import authReducer from './authSlice';
 
 const persistConfig = {
-  key: 'root',
+  key: 'auth',
   storage: AsyncStorage,
+  whitelist: ['user', 'token'],
 };
 
-const reducer = persistReducer(persistConfig, authReducer);
+const persistedReducer = persistReducer(persistConfig, authReducer);
 
 const store = configureStore({
-  reducer,
+  reducer: {
+    auth: persistedReducer, // Применение persist к authReducer
+  },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {

@@ -21,7 +21,7 @@ export default function HomeScreen() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const onLogin = async () => {
     await dispatch(logIn({ email: login, password }));
