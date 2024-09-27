@@ -65,6 +65,19 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
+          name="orders/index"
+          options={{
+            href: null,
+            title: "Orders",
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon
+                name={focused ? "home" : "home-outline"}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
           name="settings"
           options={{
             href: isLoggedIn ? '/(tabs)/settings' : null,
